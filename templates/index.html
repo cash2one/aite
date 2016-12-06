@@ -15,13 +15,28 @@
     <script type="text/javascript" src={% static "js/jquery-1.7.2.min.js" %}></script>
     <script type="text/javascript" src={% static "js/jquery.postjson.js" %}></script>
     <script type="text/javascript" src={% static "js/bootstrap.min.js" %}></script>
+    <script type="text/javascript" src={% static "js/jquery.cookie.js" %}></script>
+    
     <script type="text/javascript">
 $(function() {
     window.setInterval("hint()", 30000);
+    
     timer_check();
     $('#btn-post').click(post_weibo);
     load_weibo();
     load_friends();
+});
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+        }
+    }
 });
 
 function load_friends() {

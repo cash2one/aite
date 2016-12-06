@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response,redirect
+from django.http import HttpResponse
 from weibo import APIClient,APIError
 from aite.settings import app_id,app_secret
 from datetime import datetime, tzinfo, timedelta
+
 from .models import users
+import json,time
 # Create your views here.
 
 def index(request):
-
     if _check_cookie(request):
-        return render_to_response('index.html')
+        uid, access_token, expired_time = _check_cookie(request)
+        u = users.objects.filter(uid=uid)[0]
+        return render_to_response('index.html',{'user':u})
     else:
         return render_to_response('signin.html')
 
@@ -34,8 +38,9 @@ def callback(request):
     client.set_access_token(access_token, expires_in)
     u = client.users.show.get(uid=uid)
     # logging.info('got user: %s' % uid)
+  
     try:
-        user = users.objects.get(uid=uid)
+        user = users.objects.filter(uid=uid)[0]
         user.name = u.screen_name
         user.image_url = u.avatar_large or u.profile_image_url
         user.statuses_count = u.statuses_count
@@ -43,10 +48,12 @@ def callback(request):
         user.followers_count = u.followers_count
         user.verified = u.verified
         user.verified_type = u.verified_type
-        user.auth_token = u.access_token
+        user.auth_token = access_token
         user.expired_time = expires_in
         user.save()
-    except:
+      
+    except Exception,e:
+        print str(e)
         p = users.objects.create(name=u.screen_name, \
             image_url=u.avatar_large or u.profile_image_url, \
             statuses_count=u.statuses_count, \
@@ -59,8 +66,7 @@ def callback(request):
             uid=uid)
     request.session['uid'] = uid
     request.session['access_token'] = access_token
-    request.set_expiry(expires_in)
-
+    request.session.set_expiry(expires_in)
     return redirect('/')
 
 def update(request):
@@ -87,7 +93,7 @@ def friends(request):
             client.set_access_token(access_token,expired_time)
             try:
                 r = client.friendships.friends.get(uid=uid, count=99)
-                return [_format_user(u) for u in r.users]
+                return HttpResponse(json.dumps({'data':[_format_user(u) for u in r.users]}), content_type="application/json")
             except APIError, e:
                 return dict(error='failed')
         else:
@@ -101,7 +107,7 @@ def load(request):
             client.set_access_token(access_token,expired_time)
             try:
                 r = client.statuses.home_timeline.get()
-                return [_format_weibo(s) for s in r.statuses]
+                return  HttpResponse(json.dumps({'data':[_format_weibo(s) for s in r.statuses]}), content_type="application/json")
             except APIError, e:
                 return dict(error='failed')
         else:
@@ -114,7 +120,8 @@ def hint(request):
             client = _create_client()
             client.set_access_token(access_token,expired_time)
             try:
-                return client.remind.unread_count.get()
+                return HttpResponse(json.dumps({'data':client.remind.unread_count.get()}),content_type="application/json")
+
             except APIError, e:
                 return dict(error='failed')
         else:
@@ -130,7 +137,7 @@ def _check_cookie(request):
         return False
     
 def _create_client():
-    return APIClient(app_id, app_secret, redirect_uri='http://127.0.0.1:8000')
+    return APIClient(app_id, app_secret, redirect_uri='http://127.0.0.1:8000/callback')
 
 _TD_ZERO = timedelta(0)
 _TD_8 = timedelta(hours=8)

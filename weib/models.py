@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 
 class users(models.Model):
-    uid = models.IntegerField()
+    uid = models.CharField(max_length=200)
     name = models.CharField(max_length=50)
     image_url = models.TextField()
     statuses_count = models.IntegerField()

@@ -46,7 +46,7 @@ function load_friends() {
             }
             else {
                 L = []
-                $.each(result, function(index, u) {
+                $.each(result.data, function(index, u) {
                         L.push('<div><a href="http://weibo.com/' + u.profile_url + '" target="_blank"><img class="small" src="' + u.profile_image_url + '" /></a></div>');
                 });
                 $('#friend-list').prepend(L.join(''));
@@ -97,11 +97,11 @@ function hint() {
             else {
                 if (is_loading())
                     return;
-                if (result.status==0)
+                if (result.data.status==0)
                     return;
                 $('#span-load-ok').hide();
                 $('#span-load-failed').hide();
-                $('#span-load-hint').html('<a href="javascript:load_weibo()">有' + result.status + '条新微博，点击查看</a>').show();
+                $('#span-load-hint').html('<a href="javascript:load_weibo()">有' + result.data.status + '条新微博，点击查看</a>').show();
             }
     })
 }
@@ -194,8 +194,8 @@ function load_weibo() {
                 $('#span-load-failed').show();
             }
             else {
-                $('#span-load-ok').text('获取到' + result.length + '条新微博').show();
-                append_weibo(result);
+                $('#span-load-ok').text('获取到' + result.data.length + '条新微博').show();
+                append_weibo(result.data);
             }
     }).error(function() {
             $('#span-loading').hide();

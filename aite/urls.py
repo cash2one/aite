@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^friends$','weib.views.friends'),
     url(r'^load$','weib.views.load'),
     url(r'^hint$','weib.views.hint'),
+    url(r'^callback','weib.views.callback'),
  
 ]

@@ -77,11 +77,14 @@ def update(request):
             client.set_access_token(access_token,expired_time)
             try:
                 r = client.statuses.update.post(status=request.POST.get('status'))
+                print r
                 if 'error' in r:
                     return r
-                return dict(result='success')
+                return HttpResponse(json.dumps({'data': 'ok'}),
+                                    content_type="application/json")
             except APIError, e:
-                return dict(error='failed')
+                return HttpResponse(json.dumps({'error': str(e)}),
+                                    content_type="application/json")
         else:
             return render_to_response('signin.html')
 
@@ -95,7 +98,9 @@ def friends(request):
                 r = client.friendships.friends.get(uid=uid, count=99)
                 return HttpResponse(json.dumps({'data':[_format_user(u) for u in r.users]}), content_type="application/json")
             except APIError, e:
-                return dict(error='failed')
+                return HttpResponse(json.dumps({'error': str(e)}),
+                                    content_type="application/json")
+                
         else:
             return render_to_response('signin.html')
 
@@ -109,7 +114,8 @@ def load(request):
                 r = client.statuses.home_timeline.get()
                 return  HttpResponse(json.dumps({'data':[_format_weibo(s) for s in r.statuses]}), content_type="application/json")
             except APIError, e:
-                return dict(error='failed')
+                return HttpResponse(json.dumps({'error': str(e)}),
+                                    content_type="application/json")
         else:
              return render_to_response('signin.html')
 
@@ -123,7 +129,8 @@ def hint(request):
                 return HttpResponse(json.dumps({'data':client.remind.unread_count.get()}),content_type="application/json")
 
             except APIError, e:
-                return dict(error='failed')
+                return HttpResponse(json.dumps({'error': str(e)}),
+                                    content_type="application/json")
         else:
             return render_to_response('signin.html')
 

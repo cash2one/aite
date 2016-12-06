@@ -27,7 +27,7 @@ DEBUG = True
 # weibo api
 app_id = '4088156101'
 app_secret = '4f2cb0969fb47efb4443ea2cf9147358'
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition

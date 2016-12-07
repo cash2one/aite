@@ -6,6 +6,9 @@ ehthumbs.db
 Desktop.ini
 *.pyc
 .idea/*
+*.config
+*.ini
+uwsgi_params
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 

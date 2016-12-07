@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response,redirect
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import HttpResponse
 from weibo import APIClient,APIError
 from aite.settings import app_id,app_secret
@@ -8,7 +9,7 @@ from datetime import datetime, tzinfo, timedelta
 from .models import users
 import json,time
 # Create your views here.
-
+@ensure_csrf_cookie
 def index(request):
     if _check_cookie(request):
         uid, access_token, expired_time = _check_cookie(request)
@@ -17,7 +18,7 @@ def index(request):
     else:
         return render_to_response('signin.html')
 
-
+@ensure_csrf_cookie
 def signin(request):
     client = _create_client()
     return redirect(client.get_authorize_url())
@@ -87,6 +88,24 @@ def update(request):
                                     content_type="application/json")
         else:
             return render_to_response('signin.html')
+def update_p(request):
+    if request.method == 'POST':
+        if _check_cookie(request):
+            uid,access_token,expired_time = _check_cookie(request)
+            client = _create_client()
+            client.set_access_token(access_token,expired_time)
+            try:
+                r = client.statuses.upload.post(status=request.POST.get('status'))
+                print r
+                if 'error' in r:
+                    return r
+                return HttpResponse(json.dumps({'data': 'ok'}),
+                                    content_type="application/json")
+            except APIError, e:
+                return HttpResponse(json.dumps({'error': str(e)}),
+                                    content_type="application/json")
+        else:
+            return render_to_response('signin.html')
 
 def friends(request):
     if request.method == 'POST':
@@ -144,7 +163,7 @@ def _check_cookie(request):
         return False
     
 def _create_client():
-    return APIClient(app_id, app_secret, redirect_uri='http://127.0.0.1:8000/callback')
+    return APIClient(app_id, app_secret, redirect_uri='http://52kantu.cn/callback')
 
 _TD_ZERO = timedelta(0)
 _TD_8 = timedelta(hours=8)

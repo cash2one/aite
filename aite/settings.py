@@ -25,9 +25,9 @@ SECRET_KEY = '5!olpze-8^%00i2+ir%yl3ea+l9@_igh&48olalva^n86x0dm%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # weibo api
-app_id = '4088156101'
-app_secret = '4f2cb0969fb47efb4443ea2cf9147358'
-ALLOWED_HOSTS = ['localhost']
+app_id = '1348218692'
+app_secret = '2707c8013ec7295af967971f5f4731ec'
+ALLOWED_HOSTS = ['localhost','127.0.0.1','52kantu.cn','www.52kantu.cn']
 
 
 # Application definition
@@ -81,8 +81,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'weibo',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'USER': 'loc',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
     }
 }

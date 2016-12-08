@@ -27,5 +27,7 @@ urlpatterns = [
     url(r'^load$','weib.views.load'),
     url(r'^hint$','weib.views.hint'),
     url(r'^callback','weib.views.callback'),
+    
+    url(r'^upload','weib.views.uploadimg')
  
 ]

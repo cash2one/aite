@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response,redirect
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie,csrf_exempt
 from django.http import HttpResponse
 from weibo import APIClient,APIError
 from aite.settings import app_id,app_secret
@@ -22,9 +22,13 @@ def index(request):
 def signin(request):
     client = _create_client()
     return redirect(client.get_authorize_url())
+@csrf_exempt
 def uploadimg(request):
     if request.method == 'POST':
-        new_img = ss(img=request.FILES.get('img'))
+        
+        photo=request.FILES.get('file')
+        print photo.name
+        new_img = ss(img=photo)
         new_img.save()
         return HttpResponse('上传成功')
 
@@ -168,7 +172,8 @@ def _check_cookie(request):
         return False
     
 def _create_client():
-    return APIClient(app_id, app_secret, redirect_uri='http://52kantu.cn/callback')
+    # return APIClient(app_id, app_secret, redirect_uri='http://52kantu.cn/callback')
+    return APIClient(app_id, app_secret, redirect_uri='http://127.0.0.1:8000/callback')
 
 _TD_ZERO = timedelta(0)
 _TD_8 = timedelta(hours=8)

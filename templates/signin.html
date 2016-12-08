@@ -1,25 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>mini weibo</title>
-    <!--[if lt IE 9]>
-        <script src={% static "js/html5.js" %}></script>
+{% extends 'base.html' %}
 
-    <![endif]-->
-    <link rel="stylesheet" href= {% static "css/bootstrap.css" %} />
-    <link rel="stylesheet" href= {% static "css/custom.css" %} />
-    <meta property="wb:webmaster" content="0f27fc98302e3c27" />
-
-    <script type="text/javascript" src={% static "js/jquery-1.7.2.min.js" %}></script>
-    <script type="text/javascript" src={% static "js/jquery.postjson.js" %}></script>
-    <script type="text/javascript" src={% static "js/bootstrap.min.js" %}></script>
-    <script type="text/javascript" src={% static "js/jquery.cookie.js" %}></script>
-    <script type="text/javascript">
-
-    </script>
-</head>
+{% block body %}
 <body>
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
@@ -101,29 +82,5 @@
                 <div class="topborder"></div>
             </div>
         </div>
+{% endblock %}
 
-        <div id="footer" class="row" style="background-color:#fff">
-            <div class="span3">
-                <p>作者：<a href="http://weibo.com/liaoxuefeng" target="_blank">@廖雪峰</a></p>
-                <p><iframe width="136" height="24" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0" scrolling="no" border="0" src="http://widget.weibo.com/relationship/followbutton.php?language=zh_cn&width=136&height=24&uid=1658384301&style=2&btn=red&dpc=1"></iframe></p>
-            </div>
-            <div class="span3">
-                <p><a href="http://www.liaoxuefeng.com/" target="_blank">官方博客</a></p>
-                <p><a href="https://github.com/michaelliao/sinaweibopy" target="_blank">获取源码</a></p>
-            </div>
-            <div class="span3">
-                <p><a href="/static/howto.html" target="_blank">演示文档</a></p>
-                <p><a href="http://open.weibo.com/wiki/" target="_blank">新浪API文档</a></p>
-            </div>
-            <div class="span3">
-                <p>Python Web App</p>
-                <p><a href="http://sae.sina.com.cn" target="_blank"><img src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif" title="Powered by Sina App Engine"></a></p>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="span12" style="height:20px"></div>
-        </div>
-    </div>
-</body>
-</html>

@@ -6,7 +6,7 @@ from weibo import APIClient,APIError
 from aite.settings import app_id,app_secret
 from datetime import datetime, tzinfo, timedelta
 
-from .models import users
+from .models import users,ss
 import json,time
 # Create your views here.
 @ensure_csrf_cookie
@@ -22,6 +22,11 @@ def index(request):
 def signin(request):
     client = _create_client()
     return redirect(client.get_authorize_url())
+def uploadimg(request):
+    if request.method == 'POST':
+        new_img = ss(img=request.FILES.get('img'))
+        new_img.save()
+        return HttpResponse('上传成功')
 
 def signout(request):
     try:
